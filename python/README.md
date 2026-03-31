@@ -16,6 +16,35 @@ pip install -e .
 
 ## Usage
 
+### LLM Inference (Anthropic)
+
+```python
+from sorin import SorinLLM
+
+client = SorinLLM(agent_key="your-agent-key")
+
+response = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=100,
+    messages=[{"role": "user", "content": "Hello"}]
+)
+```
+
+### LLM Inference (OpenAI)
+
+```python
+from sorin import SorinOpenAI
+
+client = SorinOpenAI(agent_key="your-agent-key")
+
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Hello"}]
+)
+```
+
+### Agent Actions (GitHub, etc.)
+
 ```python
 from sorin import SorinClient
 import uuid
