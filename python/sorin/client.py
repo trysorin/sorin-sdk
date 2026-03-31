@@ -1,4 +1,5 @@
 import logging
+import time
 import uuid
 from typing import Optional
 import requests
@@ -97,3 +98,63 @@ class SorinClient:
                 extra={"error": str(e)},
             )
             return {"allowed": False, "reason": "advisory check failed"}
+
+    def wait_for_approval(
+        self,
+        approval_request_id: str,
+        timeout_seconds: int = 600,
+        poll_interval: int = 2,
+    ) -> dict:
+        """
+        Polls /api/runtime/approval-status/{id} until the approval request
+        is resolved or the timeout is reached.
+
+        Returns:
+          {"approved": True}
+          {"approved": False, "reason": "denied"}
+          {"approved": False, "reason": "timed_out"}
+          {"approved": False, "reason": "client_timeout"}
+          {"approved": False, "reason": "error"}
+        """
+        deadline = time.time() + timeout_seconds
+        url = f"{self.base_url}/api/runtime/approval-status/{approval_request_id}"
+
+        while time.time() < deadline:
+            try:
+                response = self._session.get(url, timeout=self.timeout)
+
+                if response.status_code == 404:
+                    logger.error("wait_for_approval: approval request not found")
+                    return {"approved": False, "reason": "error"}
+
+                if not response.ok:
+                    logger.warning(
+                        "wait_for_approval: non-200 response",
+                        extra={"status": response.status_code, "body": response.text},
+                    )
+                    time.sleep(poll_interval)
+                    continue
+
+                data = response.json()
+                status = data.get("status")
+
+                if status == "approved":
+                    return {"approved": True}
+                if status == "denied":
+                    return {"approved": False, "reason": "denied"}
+                if status == "timed_out":
+                    return {"approved": False, "reason": "timed_out"}
+
+                # Still pending — print progress so the developer can see it waiting
+                expires_at = data.get("expires_at")
+                print(f"[sorin] Waiting for approval... (expires: {expires_at})")
+
+            except Exception as e:
+                logger.error(
+                    "wait_for_approval: request failed",
+                    extra={"error": str(e)},
+                )
+
+            time.sleep(poll_interval)
+
+        return {"approved": False, "reason": "client_timeout"}
