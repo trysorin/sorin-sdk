@@ -4,6 +4,8 @@ import uuid
 from typing import Optional
 import requests
 
+from .github import GitHubConnector
+
 logger = logging.getLogger(__name__)
 
 
@@ -26,6 +28,10 @@ class SorinClient:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {agent_key}",
         })
+        self.github = GitHubConnector(self)
+
+    def _new_request_id(self) -> str:
+        return str(uuid.uuid4())
 
     def capture_intent(
         self,
