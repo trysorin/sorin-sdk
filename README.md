@@ -66,3 +66,6 @@ SorinOpenAI(agent_key, base_url=...)   # drop-in for openai.OpenAI
 
 - [trysorin.com](https://trysorin.com)
 - [Documentation](https://trysorin.com/docs)
+- [PyPI](https://pypi.org/project/sorin-sdk/)
+- [GitHub](https://github.com/trysorin/sorin-sdk)
+- [Dashboard](https://trysorin.com)

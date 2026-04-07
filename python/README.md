@@ -11,7 +11,7 @@ pip install sorin-sdk
 For local development:
 
 ```bash
-pip install -e .
+pip install -e ./python
 ```
 
 ## Usage
@@ -87,3 +87,6 @@ else:
 
 - [trysorin.com](https://trysorin.com)
 - [Documentation](https://trysorin.com/docs)
+- [PyPI](https://pypi.org/project/sorin-sdk/)
+- [GitHub](https://github.com/trysorin/sorin-sdk)
+- [Dashboard](https://trysorin.com)
