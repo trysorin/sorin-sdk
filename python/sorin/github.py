@@ -11,14 +11,8 @@ class GitHubConnector:
         self._client = client
 
     def _run(self, action: str, resource_id: str, resource_type: str, reasoning: str, endpoint: str, payload: dict) -> dict:
-        """Shared flow: capture_intent → authorize → HTTP call."""
+        """Shared flow: authorize → HTTP call."""
         request_id = self._client._new_request_id()
-
-        self._client.capture_intent(
-            plan={"connector": "github", "action": action, "resource_type": resource_type, "resource_id": resource_id},
-            reasoning=reasoning,
-            request_id=request_id,
-        )
 
         auth = self._client.authorize(
             action=action,
@@ -26,6 +20,7 @@ class GitHubConnector:
             resource_id=resource_id,
             resource_type=resource_type,
             request_id=request_id,
+            reasoning=reasoning,
         )
 
         if not auth.get("allowed", True):

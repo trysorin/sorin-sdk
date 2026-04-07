@@ -33,46 +33,6 @@ class SorinClient:
     def _new_request_id(self) -> str:
         return str(uuid.uuid4())
 
-    def capture_intent(
-        self,
-        plan: dict,
-        reasoning: str,
-        request_id: Optional[str] = None,
-        advisory_result: Optional[dict] = None,
-    ) -> str:
-        if request_id is None:
-            request_id = self._new_request_id()
-        payload = {
-            "agent_key": self.agent_key,
-            "plan": plan,
-            "action": plan.get("action"),
-            "connector": plan.get("connector"),
-            "resource_id": plan.get("resource_id"),
-            "reasoning": {"text": reasoning},
-            "advisory_result": advisory_result,
-            "request_id": request_id,
-            "session_id": self.session_id,
-            "sdk_version": self.sdk_version,
-            "sdk_language": "python",
-        }
-        try:
-            response = self._session.post(
-                f"{self.base_url}/api/runtime/log-intent",
-                json=payload,
-                timeout=self.timeout,
-            )
-            if not response.ok:
-                logger.warning(
-                    "capture_intent: non-200 response",
-                    extra={"status": response.status_code, "body": response.text},
-                )
-        except Exception as e:
-            logger.error(
-                "capture_intent: request failed",
-                extra={"error": str(e)},
-            )
-        return request_id
-
     def authorize(
         self,
         action: str,
@@ -80,6 +40,7 @@ class SorinClient:
         resource_id: str,
         resource_type: str = "repo",
         request_id: Optional[str] = None,
+        reasoning: Optional[str] = None,
     ) -> dict:
         payload = {
             "action": action,
@@ -88,6 +49,8 @@ class SorinClient:
             "resource_type": resource_type,
             "request_id": request_id,
         }
+        if reasoning is not None:
+            payload["reasoning"] = reasoning
         _fail_open = {"allowed": True, "reason": "advisory_unavailable", "warning": "Sorin advisory check unreachable — proceeding without authorization check"}
         try:
             response = self._session.post(
