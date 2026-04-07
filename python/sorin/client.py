@@ -48,6 +48,7 @@ class SorinClient:
             "resource_id": resource_id,
             "resource_type": resource_type,
             "request_id": request_id,
+            "session_id": self.session_id,
         }
         if reasoning is not None:
             payload["reasoning"] = reasoning
