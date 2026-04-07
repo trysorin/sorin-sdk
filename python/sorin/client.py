@@ -39,7 +39,9 @@ class SorinClient:
         reasoning: str,
         request_id: Optional[str] = None,
         advisory_result: Optional[dict] = None,
-    ) -> None:
+    ) -> str:
+        if request_id is None:
+            request_id = self._new_request_id()
         payload = {
             "agent_key": self.agent_key,
             "plan": plan,
@@ -69,6 +71,7 @@ class SorinClient:
                 "capture_intent: request failed",
                 extra={"error": str(e)},
             )
+        return request_id
 
     def authorize(
         self,
@@ -85,6 +88,7 @@ class SorinClient:
             "resource_type": resource_type,
             "request_id": request_id,
         }
+        _fail_open = {"allowed": True, "reason": "advisory_unavailable", "warning": "Sorin advisory check unreachable — proceeding without authorization check"}
         try:
             response = self._session.post(
                 f"{self.base_url}/api/runtime/advisory-authorize",
@@ -93,17 +97,17 @@ class SorinClient:
             )
             if not response.ok:
                 logger.warning(
-                    "authorize: non-200 response",
+                    "authorize: non-200 response — failing open",
                     extra={"status": response.status_code, "body": response.text},
                 )
-                return {"allowed": False, "reason": "advisory check failed"}
+                return _fail_open
             return response.json()
         except Exception as e:
-            logger.error(
-                "authorize: request failed",
+            logger.warning(
+                "authorize: request failed — failing open",
                 extra={"error": str(e)},
             )
-            return {"allowed": False, "reason": "advisory check failed"}
+            return _fail_open
 
     def wait_for_approval(
         self,

@@ -1,54 +1,66 @@
-# Sorin SDK
+# Sorin Python SDK
 
-Official SDKs for the Sorin agent authorization and observability platform.
+## Installation
+
+```
+pip install sorin-sdk
+```
+
+or for local development:
+
+```
+pip install -e /path/to/sorin-sdk
+```
 
 ## Quick Start
 
-### LLM Inference (Anthropic)
+### Governed GitHub actions
 
 ```python
-# Before — no visibility
-import anthropic
-client = anthropic.Anthropic(api_key="sk-ant-...")
+# Every call handles intent capture, authorization, and execution in one shot
+from sorin import SorinClient
 
-# After — full audit trail in Sorin, zero other changes
-from sorin import SorinLLM
-client = SorinLLM(agent_key="<sorin-agent-key>")
+sorin = SorinClient(agent_key="<your-sorin-agent-key>")
 
-# Everything else stays identical
-response = client.messages.create(
-    model="claude-sonnet-4-20250514",
-    max_tokens=100,
-    messages=[{"role": "user", "content": "Hello"}]
-)
+sorin.github.read_file("org", "repo", "README.md")
+sorin.github.create_branch("org", "repo", "my-feature")
+sorin.github.push_file("org", "repo", "file.md", "# Hello", "add file", "my-feature")
+pr = sorin.github.create_pr("org", "repo", "My PR", "body", "my-feature")
+sorin.github.comment("org", "repo", pr["pr_number"], "Done!")
 ```
 
-### LLM Inference (OpenAI)
+### LLM inference (one-line swap)
 
 ```python
 # Before
-from openai import OpenAI
-client = OpenAI(api_key="sk-...")
+import anthropic
+client = anthropic.Anthropic(api_key="sk-ant-...")
 
-# After
+# After — full audit trail, zero other changes
+from sorin import SorinLLM
+client = SorinLLM(agent_key="<your-sorin-agent-key>")
+response = client.messages.create(...)  # identical
+
+# OpenAI
 from sorin import SorinOpenAI
-client = SorinOpenAI(agent_key="<sorin-agent-key>")
+client = SorinOpenAI(agent_key="<your-sorin-agent-key>")
+response = client.chat.completions.create(...)  # identical
 ```
 
-### Agent Actions (GitHub, etc.)
+## Reference
 
-```python
-from sorin import SorinClient
-
-sorin = SorinClient(agent_key="<sorin-agent-key>")
-sorin.capture_intent(plan={...}, reasoning="...")
-auth = sorin.authorize(action="list-pulls", connector="github", resource_id="org/repo")
 ```
+SorinClient(agent_key, base_url="https://sorin-eight.vercel.app")
+  .github.list_prs(owner, repo)
+  .github.read_file(owner, repo, path, ref="main")
+  .github.create_branch(owner, repo, branch, from_branch="main")
+  .github.push_file(owner, repo, path, content, message, branch, sha=None)
+  .github.create_pr(owner, repo, title, body, head, base="main")
+  .github.comment(owner, repo, pr_number, message)
 
-## Packages
-
-- [`python/`](./python) — Python SDK (`pip install sorin-sdk`)
-- `js/` — JavaScript/TypeScript SDK (coming soon)
+SorinLLM(agent_key, base_url=...)      # drop-in for anthropic.Anthropic
+SorinOpenAI(agent_key, base_url=...)   # drop-in for openai.OpenAI
+```
 
 ## Links
 

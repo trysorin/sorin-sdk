@@ -60,7 +60,7 @@ class GitHubConnector:
                          {"owner": owner, "repo": repo})
 
     def comment(self, owner: str, repo: str, pr_number: int, message: str, reasoning: str = "Commenting on pull request") -> dict:
-        return self._run("comment-pr", f"{owner}/{repo}#{pr_number}", "pull_request", reasoning, "comment",
+        return self._run("comment-pr", f"{owner}/{repo}#{pr_number}", "repo", reasoning, "comment",
                          {"owner": owner, "repo": repo, "prNumber": pr_number, "message": message})
 
     def read_file(self, owner: str, repo: str, path: str, ref: str = "main", reasoning: str = "Reading file contents") -> dict:
