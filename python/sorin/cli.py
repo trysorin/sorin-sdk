@@ -4,7 +4,7 @@ import sys
 
 import click
 
-MCP_URL = "https://trysorin.com/api/mcp"
+MCP_URL = "https://www.trysorin.com/api/mcp"
 
 
 @click.group()
