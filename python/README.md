@@ -65,19 +65,26 @@ else:
     print(f"Blocked: {auth.get('reason')}")
 ```
 
-## MCP Server (Claude Code & Cursor)
+## MCP Server
 
-The package ships a `sorin` CLI that installs the Sorin MCP server into your AI coding tool:
+The package ships a `sorin` CLI that connects any MCP-compatible AI coding tool to the Sorin MCP server.
 
+**Claude Code** — registers the server automatically:
 ```bash
-# Claude Code — registers the server automatically
 sorin mcp install --key <your-sorin-agent-key>
-
-# Cursor — prints JSON to paste into ~/.cursor/mcp.json
-sorin mcp install --key <your-sorin-agent-key> --cursor
 ```
 
-Restart your editor after installing to connect to the server.
+**Cursor, Windsurf, VS Code, or any host that uses `mcpServers` JSON config** — prints the config block to paste in:
+```bash
+sorin mcp install --key <your-sorin-agent-key> --json
+```
+
+Config file locations:
+- Cursor: `~/.cursor/mcp.json`
+- Windsurf: `~/.codeium/windsurf/mcp_config.json`
+- VS Code: `.vscode/mcp.json` (workspace) or user settings
+
+Restart your editor after installing to connect.
 
 ## Links
 

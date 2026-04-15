@@ -20,14 +20,22 @@ def mcp():
 @mcp.command()
 @click.option("--key", required=True, help="Your Sorin agent key.")
 @click.option(
+    "--json",
+    "print_json",
+    is_flag=True,
+    default=False,
+    help="Print the JSON config block for Cursor, Windsurf, VS Code, or any MCP host that uses mcpServers JSON config.",
+)
+@click.option(
     "--cursor",
     is_flag=True,
     default=False,
-    help="Print the JSON config block for Cursor's MCP settings instead of running the CLI command.",
+    hidden=True,
+    help="Alias for --json (kept for backwards compatibility).",
 )
-def install(key: str, cursor: bool) -> None:
-    """Install the Sorin MCP server into Claude Code (or print Cursor config)."""
-    if cursor:
+def install(key: str, print_json: bool, cursor: bool) -> None:
+    """Install the Sorin MCP server into Claude Code, or print config for other MCP hosts."""
+    if print_json or cursor:
         config = {
             "mcpServers": {
                 "sorin": {
@@ -36,7 +44,12 @@ def install(key: str, cursor: bool) -> None:
                 }
             }
         }
-        click.echo("Paste the following into your Cursor MCP settings (~/.cursor/mcp.json):\n")
+        click.echo(
+            "Add the following to your MCP settings file and restart your editor:\n"
+            "  Cursor:   ~/.cursor/mcp.json\n"
+            "  Windsurf: ~/.codeium/windsurf/mcp_config.json\n"
+            "  VS Code:  .vscode/mcp.json (workspace) or user settings\n"
+        )
         click.echo(json.dumps(config, indent=2))
         return
 
