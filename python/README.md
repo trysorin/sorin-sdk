@@ -65,6 +65,20 @@ else:
     print(f"Blocked: {auth.get('reason')}")
 ```
 
+## MCP Server (Claude Code & Cursor)
+
+The package ships a `sorin` CLI that installs the Sorin MCP server into your AI coding tool:
+
+```bash
+# Claude Code — registers the server automatically
+sorin mcp install --key <your-sorin-agent-key>
+
+# Cursor — prints JSON to paste into ~/.cursor/mcp.json
+sorin mcp install --key <your-sorin-agent-key> --cursor
+```
+
+Restart your editor after installing to connect to the server.
+
 ## Links
 
 - [trysorin.com](https://trysorin.com)

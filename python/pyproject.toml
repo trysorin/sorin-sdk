@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sorin-sdk"
-version = "0.1.2"
+version = "0.1.3"
 description = "Python SDK for Sorin — AI agent governance and security"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -12,7 +12,11 @@ dependencies = [
     "requests>=2.28.0",
     "anthropic>=0.20.0",
     "openai>=1.0.0",
+    "click>=8.0.0",
 ]
+
+[project.scripts]
+sorin = "sorin.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["sorin"]

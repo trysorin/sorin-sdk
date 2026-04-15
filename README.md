@@ -47,6 +47,20 @@ client = SorinOpenAI(agent_key="<your-sorin-agent-key>")
 response = client.chat.completions.create(...)  # identical
 ```
 
+## MCP Server (Claude Code & Cursor)
+
+Install the Sorin MCP server with one command:
+
+```bash
+# Claude Code
+sorin mcp install --key <your-sorin-agent-key>
+
+# Cursor — prints the JSON block to paste into ~/.cursor/mcp.json
+sorin mcp install --key <your-sorin-agent-key> --cursor
+```
+
+The `sorin` CLI is included with the `sorin-sdk` package (`pip install sorin-sdk`).
+
 ## Reference
 
 ```

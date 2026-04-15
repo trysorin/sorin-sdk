@@ -13,7 +13,7 @@ class SorinClient:
     def __init__(
         self,
         agent_key: str,
-        base_url: str = "https://sorin-eight.vercel.app",
+        base_url: str = "https://trysorin.com",
         session_id: Optional[str] = None,
         sdk_version: str = "0.1.0",
         timeout: int = 5,
