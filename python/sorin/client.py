@@ -4,9 +4,42 @@ import uuid
 from typing import Optional
 import requests
 
+from ._context import get_current_parent, set_current_parent
 from .github import GitHubConnector
 
 logger = logging.getLogger(__name__)
+
+
+class _SorinSession(requests.Session):
+    """
+    requests.Session subclass that auto-threads parent-call context.
+
+    On every outbound request:
+      - If get_current_parent() is set, inject `x-sorin-parent-request-id`
+        (unless the caller already set it explicitly).
+
+    On every response:
+      - If `x-sorin-request-id` is present, call set_current_parent(). Only
+        LLM proxy routes emit this header, so tool-call responses from
+        github/slack routes are naturally no-ops here.
+    """
+
+    def request(self, method, url, **kwargs):  # type: ignore[override]
+        headers = kwargs.get("headers") or {}
+        # Normalize to dict so we can set keys regardless of caller type.
+        if not isinstance(headers, dict):
+            headers = dict(headers)
+        parent = get_current_parent()
+        if parent and "x-sorin-parent-request-id" not in {k.lower() for k in headers}:
+            headers["X-Sorin-Parent-Request-Id"] = parent
+        kwargs["headers"] = headers
+
+        response = super().request(method, url, **kwargs)
+
+        rid = response.headers.get("x-sorin-request-id")
+        if rid:
+            set_current_parent(rid)
+        return response
 
 
 class SorinClient:
@@ -23,7 +56,7 @@ class SorinClient:
         self.session_id = session_id or str(uuid.uuid4())
         self.sdk_version = sdk_version
         self.timeout = timeout
-        self._session = requests.Session()
+        self._session = _SorinSession()
         self._session.headers.update({
             "Content-Type": "application/json",
             "Authorization": f"Bearer {agent_key}",

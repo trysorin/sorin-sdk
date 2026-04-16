@@ -65,6 +65,21 @@ else:
     print(f"Blocked: {auth.get('reason')}")
 ```
 
+### Tool calls grouped by LLM turn
+
+The Activity dashboard groups your agent's tool calls under the LLM turn that triggered them. No setup required — the SDK handles it when you use `SorinLLM`/`SorinOpenAI` and `SorinClient` together.
+
+If a single LLM turn fires multiple parallel tool calls, opt into finer-grained labeling by passing the block id:
+
+```python
+response = sorin_llm.messages.create(model=..., messages=..., tools=...)
+for block in response.content:
+    if block.type == "tool_use":
+        sorin.github.push_file(**block.input, tool_use_id=block.id)
+```
+
+`tool_use_id` is optional on every `sorin.github.*` method.
+
 ## MCP Server
 
 The package ships a `sorin` CLI that connects any MCP-compatible AI coding tool to the Sorin MCP server.
