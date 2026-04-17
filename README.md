@@ -62,17 +62,22 @@ for block in response.content:
 
 `tool_use_id` is optional on every `sorin.github.*` method.
 
-## MCP Server (Claude Code & Cursor)
+## MCP Server (Claude Code, Cursor, Windsurf, VS Code)
 
 Install the Sorin MCP server with one command:
 
 ```bash
-# Claude Code
+# Claude Code — registers the server automatically
 sorin mcp install --key <your-sorin-agent-key>
 
-# Cursor — prints the JSON block to paste into ~/.cursor/mcp.json
-sorin mcp install --key <your-sorin-agent-key> --cursor
+# Cursor, Windsurf, VS Code — prints the JSON config block to paste in
+sorin mcp install --key <your-sorin-agent-key> --json
 ```
+
+Config file locations for `--json` hosts:
+- Cursor: `~/.cursor/mcp.json`
+- Windsurf: `~/.codeium/windsurf/mcp_config.json`
+- VS Code: `.vscode/mcp.json` (workspace) or user settings
 
 The `sorin` CLI is included with the `sorin-sdk` package (`pip install sorin-sdk`).
 
