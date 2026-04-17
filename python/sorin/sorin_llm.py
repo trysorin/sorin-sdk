@@ -44,7 +44,7 @@ def _build_http_client() -> httpx.Client:
 
 
 class SorinLLM(anthropic.Anthropic):
-    def __init__(self, agent_key: str, base_url: str = "https://sorin-eight.vercel.app", **kwargs):
+    def __init__(self, agent_key: str, base_url: str = "https://www.trysorin.com", **kwargs):
         kwargs.setdefault("http_client", _build_http_client())
         super().__init__(
             api_key=agent_key,
@@ -54,7 +54,7 @@ class SorinLLM(anthropic.Anthropic):
 
 
 class SorinOpenAI(OpenAI):
-    def __init__(self, agent_key: str, base_url: str = "https://sorin-eight.vercel.app", **kwargs):
+    def __init__(self, agent_key: str, base_url: str = "https://www.trysorin.com", **kwargs):
         kwargs.setdefault("http_client", _build_http_client())
         super().__init__(
             api_key=agent_key,

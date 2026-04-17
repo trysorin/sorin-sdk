@@ -79,7 +79,7 @@ The `sorin` CLI is included with the `sorin-sdk` package (`pip install sorin-sdk
 ## Reference
 
 ```
-SorinClient(agent_key, base_url="https://sorin-eight.vercel.app")
+SorinClient(agent_key, base_url="https://www.trysorin.com")
   .github.list_prs(owner, repo)
   .github.read_file(owner, repo, path, ref="main")
   .github.create_branch(owner, repo, branch, from_branch="main")
