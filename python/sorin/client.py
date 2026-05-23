@@ -6,6 +6,7 @@ import requests
 
 from ._context import get_current_parent, set_current_parent
 from .github import GitHubConnector
+from .aws import AWSConnector
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +63,7 @@ class SorinClient:
             "Authorization": f"Bearer {agent_key}",
         })
         self.github = GitHubConnector(self)
+        self.aws = AWSConnector(self)
 
     def _new_request_id(self) -> str:
         return str(uuid.uuid4())
