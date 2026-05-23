@@ -1,11 +1,11 @@
-# sorin-sdk
+# sorin
 
 Python SDK for the [Sorin](https://trysorin.com) agent authorization and observability platform.
 
 ## Install
 
 ```bash
-pip install sorin-sdk
+pip install sorin
 ```
 
 For local development:
@@ -116,6 +116,6 @@ Restart your editor after installing to connect.
 
 - [trysorin.com](https://trysorin.com)
 - [Documentation](https://trysorin.com/docs)
-- [PyPI](https://pypi.org/project/sorin-sdk/)
+- [PyPI](https://pypi.org/project/sorin/)
 - [GitHub](https://github.com/trysorin/sorin-sdk)
 - [Dashboard](https://trysorin.com)
