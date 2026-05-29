@@ -4,8 +4,22 @@ Python SDK for the [Sorin](https://trysorin.com) agent authorization and observa
 
 ## Install
 
+If you're using the `sorin` CLI (e.g. `sorin mcp install`), install with [pipx](https://pipx.pypa.io) so the command is automatically added to your PATH:
+
+```bash
+pipx install sorin
+```
+
+If you're using the SDK in a project (importing `SorinLLM`, `SorinClient`, etc.), install with pip inside your virtual environment:
+
 ```bash
 pip install sorin
+```
+
+**Installed with pip and `sorin` command not found?** Run it via Python directly:
+
+```bash
+python3 -m sorin mcp install --key <your-key>
 ```
 
 For local development:
@@ -97,7 +111,11 @@ The package ships a `sorin` CLI that connects any MCP-compatible AI coding tool 
 
 **Claude Code** — registers the server automatically:
 ```bash
+# if installed with pipx:
 sorin mcp install --key <your-sorin-agent-key>
+
+# if installed with pip and sorin isn't on your PATH:
+python3 -m sorin mcp install --key <your-sorin-agent-key>
 ```
 
 **Cursor, Windsurf, VS Code, or any host that uses `mcpServers` JSON config** — prints the config block to paste in:
